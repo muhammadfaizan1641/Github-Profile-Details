@@ -1,6 +1,7 @@
 # GitHub Profile Details CLI
 
 A simple Node.js command-line tool that fetches and displays a GitHub user's public profile details using the GitHub REST API.
+Project URL : https://roadmap.sh/projects/nodejs-github-profile-details
 
 ## Features
 
