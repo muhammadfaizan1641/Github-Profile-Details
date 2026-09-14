@@ -8,19 +8,24 @@ async function fetchDetails(username){
         }
     });
 
-    const data = await response.json();
-
-    return {
-        name: data.name,
-        username:data.login,
-        follower:data.followers,
-        following:data.following,
-        repo:data.public_repos,
+    if(response.status==404){
+        console.error("User not found!");
+        process.exit(1);
     }
-        
-    } catch (error) {
-        console.error("Something went wrong while fetching the details!")
+    if(response.status==403){
+        console.error("GitHub API rate limit exceeded. Please try again later.");
+        process.exit(1);
     }
+    if(!response.ok){
+        console.error("GitHub API request failed with status ${response.status}")
+        process.exit(1);
+    }
+    return response.json();
+}
+catch(error){
+    console.error("Error fetching user details:", error.message);
+    process.exit(1);
+}
 }
 
 async function main(){
@@ -32,11 +37,12 @@ async function main(){
 
     const details = await fetchDetails(username);
 
+
     console.log(`Name : ${details.name}`);
-    console.log(`Username : ${details.username}`);
-    console.log(`Profile : ${'https://github.com/'}${details.username}`);
-    console.log(`Public Repo : ${details.repo}`);
-    console.log(`Follower : ${details.follower}`);
+    console.log(`Username : ${details.login}`);
+    console.log(`Profile : ${'https://github.com/'}${details.login}`);
+    console.log(`Public Repo : ${details.public_repos}`);
+    console.log(`Follower : ${details.followers}`);
     console.log(`Following : ${details.following}`);
     
 }
